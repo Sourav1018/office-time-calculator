@@ -2,8 +2,9 @@ const routes = [
   {
     path: '/',
     name: 'home',
+    component: () => import('@/views/HomePage.vue'),
     meta: {
-      title: 'Home - Office Checkout Timer',
+      title: 'Home - Countdown Timer',
     },
   },
 ]
