@@ -7,7 +7,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title || 'Office Checkout Timer'
+  document.title = to.meta.title || 'Home'
   next()
 })
 
