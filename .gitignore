@@ -28,3 +28,9 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+certificate.crt
+private.key
+dist
+
+./node_modules
