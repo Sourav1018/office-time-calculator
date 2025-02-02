@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { RouterView } from 'vue-router'
 import { requestNotificationPermission } from '@/composables/notification'
 // Request permission when the component mounts
