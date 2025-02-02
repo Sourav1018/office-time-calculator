@@ -31,5 +31,6 @@ coverage
 
 certificate.crt
 private.key
-
 dist
+
+./node_modules
