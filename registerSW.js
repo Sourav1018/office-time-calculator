@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/office-time-calculator/sw.js', { scope: '/office-time-calculator/' })})}
