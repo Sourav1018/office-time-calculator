@@ -34,3 +34,4 @@ private.key
 dist
 
 ./node_modules
+./dev-dist

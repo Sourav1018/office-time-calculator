@@ -7,6 +7,11 @@ const routes = [
       title: 'Home - Countdown Timer',
     },
   },
+  {
+    path:'/test',
+    name: 'test',
+    component: () => import('@/layouts/MainLayout.vue'),
+  }
 ]
 
 export default routes
