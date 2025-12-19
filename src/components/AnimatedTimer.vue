@@ -14,7 +14,7 @@
                     y2="-49"
                     stroke="currentColor"
                     stroke-width="0.5"
-                    class="text-white/10"
+                    class="text-gray-300 dark:text-white/10"
                     :transform="`rotate(${i * 6})`"
                 />
                  <!-- Major Ticks -->
@@ -25,7 +25,7 @@
                     y2="-49"
                     stroke="currentColor"
                     stroke-width="1"
-                    class="text-white/30"
+                    class="text-gray-400 dark:text-white/30"
                     :transform="`rotate(${i * 30})`"
                 />
             </g>
@@ -42,7 +42,7 @@
         stroke="currentColor"
         stroke-width="5"
         fill="transparent"
-        class="text-white/10"
+        class="text-gray-200 dark:text-white/10"
       />
       <!-- Progress Circle -->
       <circle
@@ -53,7 +53,7 @@
         stroke-width="5"
         fill="transparent"
         stroke-linecap="round"
-        class="text-lime-400 transition-all duration-1000 ease-linear"
+        class="text-lime-500 dark:text-lime-400 transition-all duration-1000 ease-linear"
         :style="{ strokeDasharray: circumference, strokeDashoffset: dashOffset }"
       />
     </svg>
@@ -61,7 +61,7 @@
     <!-- Center Content -->
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center z-20">
       <div class="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-3 font-medium">Time Remaining</div>
-      <div class="text-6xl sm:text-7xl font-bold text-white tabular-nums tracking-tighter drop-shadow-2xl font-mono">
+      <div class="text-6xl sm:text-7xl font-bold text-gray-900 dark:text-white tabular-nums tracking-tighter drop-shadow-2xl font-mono">
         {{ formattedTime }}
       </div>
       <div v-if="isActive" class="mt-4 flex gap-2 items-center">

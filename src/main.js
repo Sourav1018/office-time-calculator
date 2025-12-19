@@ -12,3 +12,9 @@ app.use(pinia)
 app.use(router)
 
 app.mount('#app')
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/office-time-calculator/sw.js')
+        .then(() => console.log('Service Worker registered'))
+        .catch((err) => console.error('Service Worker error', err))
+}

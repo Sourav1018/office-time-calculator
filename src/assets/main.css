@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 @theme {
     --font-sans: 'Inter', system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
@@ -7,9 +9,8 @@
 
 @layer base {
     body {
-        background-color: black;
+        @apply bg-gray-50 dark:bg-black text-gray-900 dark:text-white transition-colors duration-300;
         font-family: var(--font-sans);
-        color: white;
     }
 }
 
