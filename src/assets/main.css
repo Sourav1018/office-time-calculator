@@ -1,1 +1,28 @@
-@import './tailwind.css';
+@import "tailwindcss";
+
+@theme {
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+@layer base {
+    body {
+        background-color: black;
+        font-family: var(--font-sans);
+        color: white;
+    }
+}
+
+/* Hide number input spinners */
+@layer utilities {
+
+    .no-spinner::-webkit-inner-spin-button,
+    .no-spinner::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .no-spinner {
+        -moz-appearance: textfield;
+    }
+}
