@@ -62,8 +62,17 @@
           <!-- Reminder Sound / Bell Button -->
           <button
             @click="$emit('toggle-sound')"
-            class="p-2.5 rounded-full transition-all duration-300 border backdrop-blur-md shadow-sm active:scale-95 bg-slate-100 border-slate-200 text-slate-600 hover:text-lime-600 hover:border-lime-500 hover:shadow-[0_0_15px_rgba(163,230,53,0.3)] dark:bg-zinc-800/80 dark:border-zinc-700/80 dark:text-slate-300 dark:hover:text-lime-400 dark:hover:border-lime-400/60 dark:hover:shadow-[0_0_20px_rgba(163,230,53,0.2)]"
-            title="Set 5-Min Reminder Notification"
+            class="px-3 py-1.5 rounded-full transition-all duration-300 border backdrop-blur-md shadow-sm active:scale-95 flex items-center gap-1.5 font-bold"
+            :class="
+              isReminderActive
+                ? 'bg-lime-400 text-slate-950 border-lime-400 shadow-[0_0_15px_rgba(163,230,53,0.5)]'
+                : 'bg-slate-100 border-slate-200 text-slate-600 hover:text-lime-600 hover:border-lime-500 dark:bg-zinc-800/80 dark:border-zinc-700/80 dark:text-slate-300 dark:hover:text-lime-400 dark:hover:border-lime-400/60'
+            "
+            :title="
+              isReminderActive
+                ? 'Reminder Notifications Active'
+                : 'Set 5-Min & Final Reminder Notifications'
+            "
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -75,6 +84,9 @@
                 d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"
               />
             </svg>
+            <span v-if="isReminderActive" class="text-[9px] font-black uppercase tracking-wider"
+              >ON</span
+            >
           </button>
         </div>
 
@@ -113,6 +125,10 @@ const props = defineProps({
     required: true,
   },
   is24Hour: {
+    type: Boolean,
+    default: false,
+  },
+  isReminderActive: {
     type: Boolean,
     default: false,
   },

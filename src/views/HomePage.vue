@@ -264,7 +264,7 @@
 
       <!-- ================= FOCUS MODE ================= -->
       <div
-        class="transition-all duration-700 ease-out flex flex-col items-center justify-center"
+        class="transition-all duration-700 ease-out flex flex-col items-center justify-center relative z-20"
         :class="
           showFocusMode
             ? 'opacity-100 scale-100 relative'
@@ -273,8 +273,8 @@
       >
         <!-- Floating Back Button -->
         <button
-          @click="showFocusMode = false"
-          class="mb-6 px-4 py-2 rounded-full glass-card border transition-all duration-300 flex items-center gap-2 group active:scale-95 shadow-lg text-slate-700 hover:text-lime-600 border-slate-200 hover:border-lime-500/60 dark:text-slate-300 dark:hover:text-lime-400 dark:border-white/10 dark:hover:border-lime-400/50"
+          @click.stop="showFocusMode = false"
+          class="relative z-50 mb-6 px-5 py-2.5 rounded-full glass-card border transition-all duration-300 flex items-center gap-2 group active:scale-95 hover:scale-105 shadow-xl cursor-pointer text-slate-800 hover:text-lime-600 border-slate-300 hover:border-lime-500 dark:text-slate-100 dark:hover:text-lime-400 dark:border-white/20 dark:hover:border-lime-400/60"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -286,7 +286,7 @@
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              stroke-width="2"
+              stroke-width="2.5"
               d="M10 19l-7-7m0 0l7-7m-7 7h18"
             />
           </svg>
@@ -315,6 +315,7 @@
         v-if="showFocusMode"
         :end-time="formattedCheckoutTime"
         :is-24-hour="is24Hour"
+        :is-reminder-active="isReminderActive"
         @reset="resetForm"
         @toggle-sound="setReminder"
         @toggle-format="toggleTimeFormat"
@@ -326,7 +327,7 @@
 <script setup>
 import AnimatedTimer from '@/components/AnimatedTimer.vue'
 import DataDeck from '@/components/DataDeck.vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 defineOptions({
   name: 'HomePage',
@@ -348,6 +349,7 @@ const remainingTime = ref('00:00:00')
 const progressPercentage = ref(0)
 const isTimerRunning = ref(false)
 const showFocusMode = ref(false)
+const isReminderActive = ref(false)
 
 let timerInterval = null
 
@@ -394,7 +396,6 @@ watch(isHalfDay, (newVal) => {
 // ----------------------------
 
 // --- Input Validation ---
-import { watch } from 'vue'
 watch(minutes, (newVal) => {
   if (newVal === '') return
   if (newVal > 59) minutes.value = 59
@@ -410,6 +411,7 @@ watch(hours, (newVal) => {
 
 function resetForm() {
   isTimerRunning.value = false
+  isReminderActive.value = false
   showFocusMode.value = false
   detectDayAndDefaults() // Reset back to smart defaults
 
@@ -465,6 +467,12 @@ function saveCheckoutTime() {
   localStorage.setItem(currentDateKey, formattedCheckoutTime.value)
 }
 
+function saveTimerDataState() {
+  const timerData = JSON.parse(localStorage.getItem('timerData')) || {}
+  timerData.isReminderActive = isReminderActive.value
+  localStorage.setItem('timerData', JSON.stringify(timerData))
+}
+
 function startTimer() {
   if (!hours.value && !minutes.value && !decimalHours.value) return
 
@@ -486,6 +494,7 @@ function startTimer() {
       startTime: startTime.getTime(),
       checkoutDate: checkoutDate.getTime(),
       totalDuration: totalDuration,
+      isReminderActive: isReminderActive.value,
       formState: {
         hours: hours.value,
         minutes: minutes.value,
@@ -513,8 +522,13 @@ function runTimer(checkoutTime, totalDuration) {
     if (timeDiff <= 0) {
       clearInterval(timerInterval)
       remainingTime.value = '00:00:00'
-      progressPercentage.value = 0
+      progressPercentage.value = 100
       isTimerRunning.value = false
+      isReminderActive.value = false
+      notifyUser(
+        'Shift Completed!',
+        `Your shift has officially ended at ${formattedCheckoutTime.value}. Time to check out!`,
+      )
       clearTimerData()
       return
     }
@@ -562,6 +576,10 @@ function resumeTimer() {
         isHalfDay.value = timerData.formState.isHalfDay
     }
 
+    if (timerData.isReminderActive !== undefined) {
+      isReminderActive.value = timerData.isReminderActive
+    }
+
     const currentTime = new Date().getTime()
     const remainingTimeInMillis = timerData.checkoutDate - currentTime
 
@@ -586,8 +604,6 @@ function resumeTimer() {
   }
 }
 
-// ... rest of checking logic ...
-
 function checkAndRestoreCheckoutTime() {
   const currentDateKey = `date_${new Date().toISOString().split('T')[0]}`
 
@@ -610,24 +626,48 @@ function checkAndRestoreCheckoutTime() {
   }
 }
 
-import { scheduleNotification } from '@/composables/notification'
+import { scheduleNotification, notifyUser } from '@/composables/notification'
 
 function setReminder() {
-  const delay = Math.max(
-    0,
-    calculateCheckoutTime().getTime() - new Date().getTime() - 5 * 60 * 1000,
-  )
+  // Toggle reminder active state
+  isReminderActive.value = !isReminderActive.value
 
+  if (!isReminderActive.value) {
+    resetNotification()
+    saveTimerDataState()
+    return
+  }
+
+  const now = new Date().getTime()
+  const checkoutTimeMs = calculateCheckoutTime().getTime()
+
+  // 1. Notification 5 minutes before checkout
+  const fiveMinDelay = Math.max(0, checkoutTimeMs - now - 5 * 60 * 1000)
   scheduleNotification(
-    'Checkout Reminder',
+    '5-Minute Checkout Warning',
     {
       body: `Your session will end in 5 minutes at ${formattedCheckoutTime.value}`,
       vibrate: [200, 100, 200],
       icon: '/office-time-calculator/notification-icon.png',
       badge: '/office-time-calculator/badge-icon.png',
     },
-    delay,
+    fiveMinDelay,
   )
+
+  // 2. Notification AT checkout time (0 minutes left)
+  const finalDelay = Math.max(0, checkoutTimeMs - now)
+  scheduleNotification(
+    'Shift Completed!',
+    {
+      body: `Your shift has officially ended at ${formattedCheckoutTime.value}. Time to check out!`,
+      vibrate: [300, 100, 300, 100, 300],
+      icon: '/office-time-calculator/notification-icon.png',
+      badge: '/office-time-calculator/badge-icon.png',
+    },
+    finalDelay,
+  )
+
+  saveTimerDataState()
 }
 
 function resetNotification() {

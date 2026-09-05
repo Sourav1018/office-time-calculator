@@ -1,13 +1,16 @@
-export function notifyUser() {
-  if (Notification.permission === 'granted') {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.ready.then(function (registration) {
-        registration.showNotification('Timer is up!', {
-          body: 'Your timer has ended.',
-          icon: '/icon.png', // Path to your notification icon
-        })
+export function notifyUser(title = 'Timer is up!', body = 'Your timer has ended.') {
+  if (!('Notification' in window) || Notification.permission !== 'granted') {
+    return
+  }
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(function (registration) {
+      registration.showNotification(title, {
+        body: body,
+        icon: '/office-time-calculator/notification-icon.png',
+        badge: '/office-time-calculator/badge-icon.png',
+        vibrate: [300, 100, 300],
       })
-    }
+    })
   }
 }
 
@@ -29,8 +32,8 @@ export const scheduleNotification = (title, options, delay) => {
     navigator.serviceWorker.ready.then((registration) => {
       registration.showNotification(title, {
         ...options,
-        icon: '/icon.png',
-        badge: '/badge.png',
+        icon: options.icon || '/office-time-calculator/notification-icon.png',
+        badge: options.badge || '/office-time-calculator/badge-icon.png',
         requireInteraction: true,
       })
     })
