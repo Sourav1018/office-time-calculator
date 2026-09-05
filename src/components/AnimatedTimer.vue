@@ -202,14 +202,14 @@ const dashOffset = computed(() => {
 // Calculate exact (x, y) coordinates of leading arc head for orbital particle dot
 const headX = computed(() => {
   const progressPercent = Math.max(0, Math.min(100, props.progress))
-  const angleDeg = (progressPercent / 100) * 360 - 90
+  const angleDeg = (progressPercent / 100) * 360
   const rad = (angleDeg * Math.PI) / 180
   return 50 + 39 * Math.cos(rad)
 })
 
 const headY = computed(() => {
   const progressPercent = Math.max(0, Math.min(100, props.progress))
-  const angleDeg = (progressPercent / 100) * 360 - 90
+  const angleDeg = (progressPercent / 100) * 360
   const rad = (angleDeg * Math.PI) / 180
   return 50 + 39 * Math.sin(rad)
 })
