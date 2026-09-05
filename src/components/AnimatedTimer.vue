@@ -5,18 +5,18 @@
     <!-- Ambient Glow Orb behind the timer -->
     <div
       class="absolute inset-0 rounded-full blur-3xl transition-all duration-1000"
-      :class="
-        isActive
-          ? 'bg-lime-400/20 dark:bg-lime-400/15 scale-110 animate-pulse'
-          : 'bg-slate-400/10 dark:bg-zinc-700/10 scale-95'
-      "
+      :style="{
+        backgroundColor: isActive ? 'var(--accent-color)' : 'transparent',
+        opacity: isActive ? 0.2 : 0.08,
+      }"
+      :class="isActive ? 'scale-110 animate-pulse' : 'scale-95'"
     ></div>
 
     <!-- Rotating Radar Scanner Sweep Accent -->
     <div
       v-if="isActive"
-      class="absolute inset-1.5 rounded-full border border-transparent animate-[spin_8s_linear_infinite] pointer-events-none opacity-70 z-10"
-      style="border-top-color: rgba(163, 230, 53, 0.8)"
+      class="absolute inset-1.5 rounded-full border border-transparent animate-[spin_8s_linear_infinite] pointer-events-none opacity-80 z-10"
+      :style="{ borderTopColor: 'var(--accent-color)' }"
     ></div>
 
     <!-- Outer Tick Marks Ring (Slow continuous rotation when active) -->
@@ -46,7 +46,7 @@
             y2="-48"
             stroke="currentColor"
             stroke-width="1.2"
-            class="text-slate-500 dark:text-lime-400/60"
+            class="text-slate-500 dark:text-white/40"
             :transform="`rotate(${i * 30})`"
           />
         </g>
@@ -55,14 +55,13 @@
 
     <!-- Main SVG Gauge Ring -->
     <svg
-      class="w-full h-full transform -rotate-90 relative z-10 drop-shadow-[0_0_25px_rgba(163,230,53,0.35)]"
+      class="w-full h-full transform -rotate-90 relative z-10 drop-shadow-[0_0_25px_rgba(var(--accent-rgb),0.35)]"
       viewBox="0 0 100 100"
     >
       <defs>
         <linearGradient id="limeProgressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#a3e635" />
-          <stop offset="60%" stop-color="#4ade80" />
-          <stop offset="100%" stop-color="#10b981" />
+          <stop offset="0%" stop-color="var(--accent-color)" />
+          <stop offset="100%" stop-color="var(--accent-color)" stop-opacity="0.8" />
         </linearGradient>
       </defs>
 
@@ -105,15 +104,15 @@
       <!-- Leading Glowing Orbital Particle Head (Travels along green arc) -->
       <g v-if="isActive && progress > 0 && progress < 100">
         <!-- Outer Glowing Pulsing Aura -->
-        <circle :cx="headX" :cy="headY" r="4" fill="#a3e635" class="animate-ping opacity-80" />
-        <!-- Solid Bright Particle Point -->
         <circle
           :cx="headX"
           :cy="headY"
-          r="3"
-          fill="#a3e635"
-          class="drop-shadow-[0_0_8px_#a3e635]"
+          r="4.5"
+          fill="var(--accent-color)"
+          class="animate-ping opacity-80"
         />
+        <!-- Solid Bright Particle Point -->
+        <circle :cx="headX" :cy="headY" r="3" fill="var(--accent-color)" />
         <!-- Center Core Light -->
         <circle :cx="headX" :cy="headY" r="1.5" fill="#ffffff" />
       </g>
@@ -137,16 +136,25 @@
       <!-- Live Status Badge -->
       <div
         v-if="isActive"
-        class="mt-4 inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-lime-500/10 border border-lime-500/30 backdrop-blur-md"
+        class="mt-4 inline-flex items-center gap-2 px-3.5 py-1 rounded-full border backdrop-blur-md transition-colors duration-500"
+        :style="{
+          backgroundColor: 'rgba(var(--accent-rgb), 0.12)',
+          borderColor: 'rgba(var(--accent-rgb), 0.4)',
+        }"
       >
         <span class="relative flex h-2 w-2">
           <span
-            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75"
+            class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+            :style="{ backgroundColor: 'var(--accent-color)' }"
           ></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-lime-500"></span>
+          <span
+            class="relative inline-flex rounded-full h-2 w-2"
+            :style="{ backgroundColor: 'var(--accent-color)' }"
+          ></span>
         </span>
         <span
-          class="text-[10px] font-black uppercase tracking-[0.2em] text-lime-600 dark:text-lime-400"
+          class="text-[10px] font-black uppercase tracking-[0.2em]"
+          :style="{ color: 'var(--accent-color)' }"
           >Countdown Active</span
         >
       </div>

@@ -8,7 +8,7 @@
       style="
         background-image: radial-gradient(
           circle at 50% 50%,
-          rgba(163, 230, 53, 0.15) 0%,
+          rgba(var(--accent-rgb), 0.15) 0%,
           transparent 60%
         );
       "
@@ -33,7 +33,10 @@
           <div
             class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-card mb-3 sm:mb-4 text-xs font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300 shadow-sm border border-slate-200/80 dark:border-white/10"
           >
-            <span class="w-2 h-2 rounded-full bg-lime-500 animate-pulse"></span>
+            <span
+              class="w-2 h-2 rounded-full animate-pulse"
+              :style="{ backgroundColor: 'var(--accent-color)' }"
+            ></span>
             <span>{{ currentDayName }} Shift</span>
           </div>
 
@@ -56,8 +59,17 @@
             class="text-[10px] sm:text-[11px] font-black uppercase tracking-widest px-3.5 sm:px-4 py-1.5 rounded-full glass-card border transition-all duration-300 shadow-sm active:scale-95 flex items-center gap-2"
             :class="
               is24Hour
-                ? 'text-lime-600 dark:text-lime-400 border-lime-400/60 bg-lime-500/10'
-                : 'text-slate-600 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:border-lime-500/50'
+                ? ''
+                : 'text-slate-600 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:border-slate-300'
+            "
+            :style="
+              is24Hour
+                ? {
+                    color: 'var(--accent-color)',
+                    borderColor: 'rgba(var(--accent-rgb), 0.6)',
+                    backgroundColor: 'rgba(var(--accent-rgb), 0.1)',
+                  }
+                : {}
             "
           >
             <svg
@@ -85,13 +97,15 @@
         >
           <!-- Hours Card Input -->
           <div
-            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group hover:border-lime-500/40 transition-all duration-300 shadow-xl"
+            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group transition-all duration-300 shadow-xl"
           >
             <div
               class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1 sm:mb-2"
             >
               <span>In Hour</span>
-              <span class="text-lime-500 font-mono">HH</span>
+              <span class="font-mono transition-colors" :style="{ color: 'var(--accent-color)' }"
+                >HH</span
+              >
             </div>
 
             <input
@@ -113,13 +127,15 @@
 
           <!-- Minutes Card Input -->
           <div
-            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group hover:border-lime-500/40 transition-all duration-300 shadow-xl"
+            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group transition-all duration-300 shadow-xl"
           >
             <div
               class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1 sm:mb-2"
             >
               <span>In Minute</span>
-              <span class="text-lime-500 font-mono">MM</span>
+              <span class="font-mono transition-colors" :style="{ color: 'var(--accent-color)' }"
+                >MM</span
+              >
             </div>
 
             <input
@@ -141,7 +157,7 @@
 
           <!-- AM / PM Toggle Card (Hidden in 24h mode) -->
           <div
-            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group hover:border-lime-500/40 transition-all duration-300 shadow-xl"
+            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group transition-all duration-300 shadow-xl"
             v-if="!is24Hour"
           >
             <div
@@ -153,10 +169,11 @@
             <button
               id="period"
               @click="period = period === 'AM' ? 'PM' : 'AM'"
-              class="w-full flex-1 rounded-2xl border transition-all duration-300 flex flex-col items-center justify-center gap-0.5 sm:gap-1 active:scale-95 py-1.5 sm:py-2 bg-slate-100/80 border-slate-200 text-slate-900 hover:border-lime-500/60 dark:bg-zinc-800/60 dark:border-zinc-700/60 dark:text-white dark:hover:border-lime-400/60"
+              class="w-full flex-1 rounded-2xl border transition-all duration-300 flex flex-col items-center justify-center gap-0.5 sm:gap-1 active:scale-95 py-1.5 sm:py-2 bg-slate-100/80 border-slate-200 text-slate-900 dark:bg-zinc-800/60 dark:border-zinc-700/60 dark:text-white"
             >
               <span
-                class="text-2xl sm:text-3xl font-black tracking-wider text-lime-600 dark:text-lime-400 font-mono"
+                class="text-2xl sm:text-3xl font-black tracking-wider font-mono transition-colors"
+                :style="{ color: 'var(--accent-color)' }"
                 >{{ period }}</span
               >
               <span
@@ -174,7 +191,7 @@
 
           <!-- Shift Mode Toggle Card (Full/Half Day) -->
           <div
-            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group hover:border-lime-500/40 transition-all duration-300 shadow-xl"
+            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group transition-all duration-300 shadow-xl"
             v-if="!isSaturday"
           >
             <div
@@ -182,7 +199,12 @@
             >
               <span>Shift Type</span>
               <span
-                class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-lime-400/20 text-lime-600 dark:text-lime-400 border border-lime-400/30"
+                class="px-1.5 py-0.5 rounded text-[9px] font-extrabold transition-colors border"
+                :style="{
+                  backgroundColor: 'rgba(var(--accent-rgb), 0.2)',
+                  color: 'var(--accent-color)',
+                  borderColor: 'rgba(var(--accent-rgb), 0.3)',
+                }"
               >
                 {{ decimalHours }}h
               </span>
@@ -190,7 +212,7 @@
 
             <button
               @click="isHalfDay = !isHalfDay"
-              class="w-full flex-1 rounded-2xl border transition-all duration-300 flex flex-col items-center justify-center gap-0.5 sm:gap-1 active:scale-95 py-1.5 sm:py-2 bg-slate-100/80 border-slate-200 text-slate-900 hover:border-lime-500/60 dark:bg-zinc-800/60 dark:border-zinc-700/60 dark:text-white dark:hover:border-lime-400/60"
+              class="w-full flex-1 rounded-2xl border transition-all duration-300 flex flex-col items-center justify-center gap-0.5 sm:gap-1 active:scale-95 py-1.5 sm:py-2 bg-slate-100/80 border-slate-200 text-slate-900 dark:bg-zinc-800/60 dark:border-zinc-700/60 dark:text-white"
             >
               <span
                 class="text-lg sm:text-xl font-black uppercase tracking-wider text-slate-900 dark:text-white"
@@ -215,10 +237,15 @@
           <!-- Big Pulsing Launch CTA Button -->
           <button
             @click="isTimerRunning ? (showFocusMode = true) : startTimer()"
-            class="w-full relative inline-flex items-center justify-center px-8 py-3.5 sm:py-4 overflow-hidden font-black text-slate-950 transition-all duration-300 bg-lime-400 rounded-2xl hover:bg-lime-300 hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_30px_rgba(163,230,53,0.35)] border border-lime-300 group"
+            class="w-full relative inline-flex items-center justify-center px-8 py-3.5 sm:py-4 overflow-hidden font-black text-slate-950 transition-all duration-300 rounded-2xl hover:scale-[1.02] active:scale-[0.98] group cursor-pointer"
+            :style="{
+              backgroundColor: 'var(--accent-color)',
+              borderColor: 'var(--accent-color)',
+              boxShadow: '0 0 30px rgba(var(--accent-rgb), 0.35)',
+            }"
           >
             <span
-              class="absolute inset-0 w-full h-full bg-gradient-to-r from-lime-300 via-lime-400 to-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity"
+              class="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-20 transition-opacity bg-white"
             ></span>
             <span
               class="relative text-xs sm:text-sm uppercase tracking-[0.2em] flex items-center gap-2"
@@ -276,7 +303,7 @@
         <!-- Floating Back Button (Generous margin below to prevent overlap) -->
         <button
           @click.stop="showFocusMode = false"
-          class="relative z-50 mb-10 sm:mb-14 px-6 py-2.5 sm:py-3 rounded-full glass-card border transition-all duration-300 flex items-center gap-2 group active:scale-95 hover:scale-105 shadow-xl cursor-pointer text-slate-800 hover:text-lime-600 border-slate-300 hover:border-lime-500 dark:text-slate-100 dark:hover:text-lime-400 dark:border-white/20 dark:hover:border-lime-400/60"
+          class="relative z-50 mb-10 sm:mb-14 px-6 py-2.5 sm:py-3 rounded-full glass-card border transition-all duration-300 flex items-center gap-2 group active:scale-95 hover:scale-105 shadow-xl cursor-pointer text-slate-800 border-slate-300 hover:border-slate-400 dark:text-slate-100 dark:border-white/20 dark:hover:border-white/40"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

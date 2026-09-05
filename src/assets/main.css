@@ -7,9 +7,14 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
+:root {
+  --accent-color: #a3e635;
+  --accent-rgb: 163, 230, 53;
+}
+
 @layer base {
   body {
-    @apply bg-slate-50 dark:bg-[#09090b] text-slate-900 dark:text-slate-100 transition-colors duration-500 min-h-screen selection:bg-lime-400 selection:text-black;
+    @apply bg-slate-50 dark:bg-[#09090b] text-slate-900 dark:text-slate-100 transition-colors duration-500 min-h-screen;
     font-family: var(--font-sans);
   }
 }
@@ -68,8 +73,9 @@
   }
 
   /* Gradient Text & Accent Effects */
-  .gradient-text-lime {
-    background: linear-gradient(135deg, #a3e635 0%, #4ade80 100%);
+  .gradient-text-lime,
+  .gradient-text-accent {
+    background: linear-gradient(135deg, var(--accent-color) 0%, rgba(var(--accent-rgb), 0.7) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }

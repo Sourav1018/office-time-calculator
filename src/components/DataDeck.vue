@@ -7,7 +7,11 @@
     >
       <!-- Subtle Ambient Glow -->
       <div
-        class="absolute inset-0 bg-gradient-to-r from-lime-400/10 via-transparent to-cyan-400/10 opacity-60 pointer-events-none"
+        class="absolute inset-0 opacity-60 pointer-events-none transition-all duration-500"
+        :style="{
+          background:
+            'linear-gradient(to right, rgba(var(--accent-rgb), 0.1), transparent, rgba(56, 189, 248, 0.1))',
+        }"
       ></div>
 
       <!-- Left Data: Current & Out Times -->
@@ -30,7 +34,8 @@
         <!-- Out Time Block -->
         <div class="flex flex-col items-start min-w-[90px]">
           <span
-            class="text-[9px] font-black uppercase tracking-[0.2em] leading-none mb-1 text-lime-600 dark:text-lime-400"
+            class="text-[9px] font-black uppercase tracking-[0.2em] leading-none mb-1 transition-colors duration-500"
+            :style="{ color: 'var(--accent-color)' }"
             >Checkout Time</span
           >
           <span
@@ -51,8 +56,17 @@
             class="px-3 py-1.5 rounded-full border transition-all duration-300 text-[10px] font-black tracking-widest uppercase shadow-sm active:scale-95"
             :class="
               is24Hour
-                ? 'bg-lime-400 text-slate-950 border-lime-400 shadow-[0_0_12px_rgba(163,230,53,0.4)]'
-                : 'bg-slate-100 dark:bg-zinc-800/80 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-zinc-700 hover:border-lime-400 dark:hover:border-lime-400/60'
+                ? 'text-slate-950 font-black'
+                : 'bg-slate-100 dark:bg-zinc-800/80 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-zinc-700 hover:border-slate-400'
+            "
+            :style="
+              is24Hour
+                ? {
+                    backgroundColor: 'var(--accent-color)',
+                    borderColor: 'var(--accent-color)',
+                    boxShadow: '0 0 12px rgba(var(--accent-rgb), 0.4)',
+                  }
+                : {}
             "
           >
             {{ is24Hour ? '24H' : '12H' }}
@@ -64,8 +78,17 @@
             class="px-3 py-1.5 rounded-full transition-all duration-300 border backdrop-blur-md shadow-sm active:scale-95 flex items-center gap-1.5 font-bold"
             :class="
               isReminderActive
-                ? 'bg-lime-400 text-slate-950 border-lime-400 shadow-[0_0_15px_rgba(163,230,53,0.5)]'
-                : 'bg-slate-100 border-slate-200 text-slate-600 hover:text-lime-600 hover:border-lime-500 dark:bg-zinc-800/80 dark:border-zinc-700/80 dark:text-slate-300 dark:hover:text-lime-400 dark:hover:border-lime-400/60'
+                ? 'text-slate-950 font-black'
+                : 'bg-slate-100 border-slate-200 text-slate-600 hover:text-slate-900 dark:bg-zinc-800/80 dark:border-zinc-700/80 dark:text-slate-300'
+            "
+            :style="
+              isReminderActive
+                ? {
+                    backgroundColor: 'var(--accent-color)',
+                    borderColor: 'var(--accent-color)',
+                    boxShadow: '0 0 15px rgba(var(--accent-rgb), 0.5)',
+                  }
+                : {}
             "
             :title="
               isReminderActive
