@@ -350,12 +350,19 @@
         @toggle-format="toggleTimeFormat"
       />
     </transition>
+    <!-- Shift Ended Sarcastic Modal Popup -->
+    <ShiftEndedModal
+      :is-open="isShiftEndedModalOpen"
+      :checkout-time="formattedCheckoutTime"
+      @close="isShiftEndedModalOpen = false"
+    />
   </div>
 </template>
 
 <script setup>
 import AnimatedTimer from '@/components/AnimatedTimer.vue'
 import DataDeck from '@/components/DataDeck.vue'
+import ShiftEndedModal from '@/components/ShiftEndedModal.vue'
 import { onMounted, ref, watch } from 'vue'
 
 defineOptions({
@@ -379,6 +386,7 @@ const progressPercentage = ref(0)
 const isTimerRunning = ref(false)
 const showFocusMode = ref(false)
 const isReminderActive = ref(false)
+const isShiftEndedModalOpen = ref(false)
 
 let timerInterval = null
 
@@ -554,6 +562,7 @@ function runTimer(checkoutTime, totalDuration) {
       progressPercentage.value = 100
       isTimerRunning.value = false
       isReminderActive.value = false
+      isShiftEndedModalOpen.value = true
       notifyUser(
         'Shift Completed!',
         `Your shift has officially ended at ${formattedCheckoutTime.value}. Time to check out!`,
