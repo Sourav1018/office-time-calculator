@@ -52,11 +52,11 @@
           </p>
         </div>
 
-        <!-- Format Toggle Bar -->
-        <div class="mb-5 sm:mb-6 flex items-center justify-center">
+        <!-- Format Toggle Bar & Preview Trigger -->
+        <div class="mb-5 sm:mb-6 flex items-center justify-center gap-3 flex-wrap">
           <button
             @click="toggleTimeFormat"
-            class="text-[10px] sm:text-[11px] font-black uppercase tracking-widest px-3.5 sm:px-4 py-1.5 rounded-full glass-card border transition-all duration-300 shadow-sm active:scale-95 flex items-center gap-2"
+            class="text-[10px] sm:text-[11px] font-black uppercase tracking-widest px-3.5 sm:px-4 py-1.5 rounded-full glass-card border transition-all duration-300 shadow-sm active:scale-95 flex items-center gap-2 cursor-pointer"
             :class="
               is24Hour
                 ? ''
@@ -87,6 +87,15 @@
               />
             </svg>
             <span>{{ is24Hour ? '24-Hour Format' : '12-Hour Format' }}</span>
+          </button>
+
+          <!-- Preview Sarcastic Celebration Popup Button -->
+          <button
+            @click="isShiftEndedModalOpen = true"
+            class="text-[10px] sm:text-[11px] font-black uppercase tracking-widest px-3.5 sm:px-4 py-1.5 rounded-full glass-card border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 transition-all duration-300 shadow-sm active:scale-95 flex items-center gap-1.5 cursor-pointer hover:border-amber-400/50 hover:bg-amber-400/10"
+          >
+            <span>Preview Celebration</span>
+            <span>🥳</span>
           </button>
         </div>
 
