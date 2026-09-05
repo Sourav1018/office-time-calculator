@@ -1,5 +1,7 @@
 <template>
-  <div class="relative flex items-center justify-center w-80 h-80 sm:w-96 sm:h-96 select-none">
+  <div
+    class="relative flex items-center justify-center w-72 h-72 sm:w-88 sm:h-88 md:w-[380px] md:h-[380px] select-none mx-auto"
+  >
     <!-- Ambient Glow Orb behind the timer -->
     <div
       class="absolute inset-0 rounded-full blur-3xl transition-all duration-1000"
@@ -84,14 +86,14 @@
     <!-- Center Digit Content -->
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center z-20">
       <div
-        class="text-[11px] font-extrabold uppercase tracking-[0.25em] text-slate-600 dark:text-slate-300 mb-2"
+        class="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-[0.25em] text-slate-600 dark:text-slate-300 mb-1 sm:mb-2"
       >
         Remaining Session
       </div>
 
       <!-- Big Mono Time Readout -->
       <div
-        class="text-5xl sm:text-6xl font-black tracking-tight font-mono tabular-nums text-slate-900 dark:text-white drop-shadow-lg"
+        class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight font-mono tabular-nums text-slate-900 dark:text-white drop-shadow-lg"
       >
         {{ formattedTime }}
       </div>

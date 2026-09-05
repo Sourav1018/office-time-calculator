@@ -16,8 +16,8 @@
 
     <!-- MAIN CONTENT CONTAINER -->
     <div
-      class="relative z-10 w-full max-w-4xl mx-auto px-5 py-8 transition-all duration-700 ease-out"
-      :class="showFocusMode ? 'scale-[0.98]' : 'scale-100'"
+      class="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 pt-4 sm:pt-8 pb-32 sm:pb-36 transition-all duration-700 ease-out"
+      :class="showFocusMode ? 'scale-[0.99]' : 'scale-100'"
     >
       <!-- ================= SETUP MODE ================= -->
       <div
@@ -29,16 +29,16 @@
         "
       >
         <!-- Modern Bento Header -->
-        <div class="text-center mb-8 sm:mb-10">
+        <div class="text-center mb-6 sm:mb-10">
           <div
-            class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-card mb-4 text-xs font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300 shadow-sm border border-slate-200/80 dark:border-white/10"
+            class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-card mb-3 sm:mb-4 text-xs font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300 shadow-sm border border-slate-200/80 dark:border-white/10"
           >
             <span class="w-2 h-2 rounded-full bg-lime-500 animate-pulse"></span>
             <span>{{ currentDayName }} Shift</span>
           </div>
 
           <h1
-            class="text-4xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-2"
+            class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-2"
           >
             Office Time <span class="gradient-text-lime">Calculator</span>
           </h1>
@@ -50,10 +50,10 @@
         </div>
 
         <!-- Format Toggle Bar -->
-        <div class="mb-6 flex items-center justify-center">
+        <div class="mb-5 sm:mb-6 flex items-center justify-center">
           <button
             @click="toggleTimeFormat"
-            class="text-[11px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full glass-card border transition-all duration-300 shadow-sm active:scale-95 flex items-center gap-2"
+            class="text-[10px] sm:text-[11px] font-black uppercase tracking-widest px-3.5 sm:px-4 py-1.5 rounded-full glass-card border transition-all duration-300 shadow-sm active:scale-95 flex items-center gap-2"
             :class="
               is24Hour
                 ? 'text-lime-600 dark:text-lime-400 border-lime-400/60 bg-lime-500/10'
@@ -80,15 +80,15 @@
 
         <!-- Bento Grid Inputs Container -->
         <div
-          class="grid gap-4 w-full max-w-2xl mb-8"
+          class="grid gap-3 sm:gap-4 w-full max-w-2xl mb-6 sm:mb-8"
           :class="!is24Hour ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2 md:grid-cols-3'"
         >
           <!-- Hours Card Input -->
           <div
-            class="glass-panel rounded-3xl p-5 flex flex-col justify-between relative group hover:border-lime-500/40 transition-all duration-300 shadow-xl"
+            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group hover:border-lime-500/40 transition-all duration-300 shadow-xl"
           >
             <div
-              class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2"
+              class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1 sm:mb-2"
             >
               <span>In Hour</span>
               <span class="text-lime-500 font-mono">HH</span>
@@ -100,7 +100,7 @@
               type="number"
               :min="is24Hour ? 0 : 1"
               :max="is24Hour ? 23 : 12"
-              class="no-spinner w-full bg-transparent text-center text-4xl sm:text-5xl font-black outline-none tracking-tight text-slate-900 dark:text-white placeholder-slate-300 dark:placeholder-zinc-700 font-mono py-2"
+              class="no-spinner w-full bg-transparent text-center text-3xl sm:text-5xl font-black outline-none tracking-tight text-slate-900 dark:text-white placeholder-slate-300 dark:placeholder-zinc-700 font-mono py-1 sm:py-2"
               placeholder="09"
             />
 
@@ -113,10 +113,10 @@
 
           <!-- Minutes Card Input -->
           <div
-            class="glass-panel rounded-3xl p-5 flex flex-col justify-between relative group hover:border-lime-500/40 transition-all duration-300 shadow-xl"
+            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group hover:border-lime-500/40 transition-all duration-300 shadow-xl"
           >
             <div
-              class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2"
+              class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1 sm:mb-2"
             >
               <span>In Minute</span>
               <span class="text-lime-500 font-mono">MM</span>
@@ -128,7 +128,7 @@
               type="number"
               min="0"
               max="59"
-              class="no-spinner w-full bg-transparent text-center text-4xl sm:text-5xl font-black outline-none tracking-tight text-slate-900 dark:text-white placeholder-slate-300 dark:placeholder-zinc-700 font-mono py-2"
+              class="no-spinner w-full bg-transparent text-center text-3xl sm:text-5xl font-black outline-none tracking-tight text-slate-900 dark:text-white placeholder-slate-300 dark:placeholder-zinc-700 font-mono py-1 sm:py-2"
               placeholder="30"
             />
 
@@ -141,11 +141,11 @@
 
           <!-- AM / PM Toggle Card (Hidden in 24h mode) -->
           <div
-            class="glass-panel rounded-3xl p-5 flex flex-col justify-between relative group hover:border-lime-500/40 transition-all duration-300 shadow-xl"
+            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group hover:border-lime-500/40 transition-all duration-300 shadow-xl"
             v-if="!is24Hour"
           >
             <div
-              class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 text-center"
+              class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1 sm:mb-2 text-center"
             >
               Period
             </div>
@@ -153,10 +153,10 @@
             <button
               id="period"
               @click="period = period === 'AM' ? 'PM' : 'AM'"
-              class="w-full flex-1 rounded-2xl border transition-all duration-300 flex flex-col items-center justify-center gap-1 active:scale-95 py-2 bg-slate-100/80 border-slate-200 text-slate-900 hover:border-lime-500/60 dark:bg-zinc-800/60 dark:border-zinc-700/60 dark:text-white dark:hover:border-lime-400/60"
+              class="w-full flex-1 rounded-2xl border transition-all duration-300 flex flex-col items-center justify-center gap-0.5 sm:gap-1 active:scale-95 py-1.5 sm:py-2 bg-slate-100/80 border-slate-200 text-slate-900 hover:border-lime-500/60 dark:bg-zinc-800/60 dark:border-zinc-700/60 dark:text-white dark:hover:border-lime-400/60"
             >
               <span
-                class="text-3xl font-black tracking-wider text-lime-600 dark:text-lime-400 font-mono"
+                class="text-2xl sm:text-3xl font-black tracking-wider text-lime-600 dark:text-lime-400 font-mono"
                 >{{ period }}</span
               >
               <span
@@ -174,11 +174,11 @@
 
           <!-- Shift Mode Toggle Card (Full/Half Day) -->
           <div
-            class="glass-panel rounded-3xl p-5 flex flex-col justify-between relative group hover:border-lime-500/40 transition-all duration-300 shadow-xl"
+            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group hover:border-lime-500/40 transition-all duration-300 shadow-xl"
             v-if="!isSaturday"
           >
             <div
-              class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2"
+              class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1 sm:mb-2"
             >
               <span>Shift Type</span>
               <span
@@ -190,10 +190,10 @@
 
             <button
               @click="isHalfDay = !isHalfDay"
-              class="w-full flex-1 rounded-2xl border transition-all duration-300 flex flex-col items-center justify-center gap-1 active:scale-95 py-2 bg-slate-100/80 border-slate-200 text-slate-900 hover:border-lime-500/60 dark:bg-zinc-800/60 dark:border-zinc-700/60 dark:text-white dark:hover:border-lime-400/60"
+              class="w-full flex-1 rounded-2xl border transition-all duration-300 flex flex-col items-center justify-center gap-0.5 sm:gap-1 active:scale-95 py-1.5 sm:py-2 bg-slate-100/80 border-slate-200 text-slate-900 hover:border-lime-500/60 dark:bg-zinc-800/60 dark:border-zinc-700/60 dark:text-white dark:hover:border-lime-400/60"
             >
               <span
-                class="text-xl font-black uppercase tracking-wider text-slate-900 dark:text-white"
+                class="text-lg sm:text-xl font-black uppercase tracking-wider text-slate-900 dark:text-white"
                 >{{ isHalfDay ? 'HALF DAY' : 'FULL DAY' }}</span
               >
               <span
@@ -215,12 +215,14 @@
           <!-- Big Pulsing Launch CTA Button -->
           <button
             @click="isTimerRunning ? (showFocusMode = true) : startTimer()"
-            class="w-full relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-black text-slate-950 transition-all duration-300 bg-lime-400 rounded-2xl hover:bg-lime-300 hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_30px_rgba(163,230,53,0.35)] border border-lime-300 group"
+            class="w-full relative inline-flex items-center justify-center px-8 py-3.5 sm:py-4 overflow-hidden font-black text-slate-950 transition-all duration-300 bg-lime-400 rounded-2xl hover:bg-lime-300 hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_30px_rgba(163,230,53,0.35)] border border-lime-300 group"
           >
             <span
               class="absolute inset-0 w-full h-full bg-gradient-to-r from-lime-300 via-lime-400 to-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity"
             ></span>
-            <span class="relative text-sm uppercase tracking-[0.2em] flex items-center gap-2">
+            <span
+              class="relative text-xs sm:text-sm uppercase tracking-[0.2em] flex items-center gap-2"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-4 w-4"
@@ -264,17 +266,17 @@
 
       <!-- ================= FOCUS MODE ================= -->
       <div
-        class="transition-all duration-700 ease-out flex flex-col items-center justify-center relative z-20"
+        class="transition-all duration-700 ease-out flex flex-col items-center justify-center relative z-20 py-4 sm:py-6"
         :class="
           showFocusMode
             ? 'opacity-100 scale-100 relative'
             : 'opacity-0 scale-90 pointer-events-none absolute inset-0'
         "
       >
-        <!-- Floating Back Button -->
+        <!-- Floating Back Button (Generous margin below to prevent overlap) -->
         <button
           @click.stop="showFocusMode = false"
-          class="relative z-50 mb-6 px-5 py-2.5 rounded-full glass-card border transition-all duration-300 flex items-center gap-2 group active:scale-95 hover:scale-105 shadow-xl cursor-pointer text-slate-800 hover:text-lime-600 border-slate-300 hover:border-lime-500 dark:text-slate-100 dark:hover:text-lime-400 dark:border-white/20 dark:hover:border-lime-400/60"
+          class="relative z-50 mb-10 sm:mb-14 px-6 py-2.5 sm:py-3 rounded-full glass-card border transition-all duration-300 flex items-center gap-2 group active:scale-95 hover:scale-105 shadow-xl cursor-pointer text-slate-800 hover:text-lime-600 border-slate-300 hover:border-lime-500 dark:text-slate-100 dark:hover:text-lime-400 dark:border-white/20 dark:hover:border-lime-400/60"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -293,11 +295,11 @@
           <span class="text-xs uppercase tracking-widest font-black">Adjust Setup</span>
         </button>
 
+        <!-- Animated Timer Gauge (Clean margin & fluid scaling) -->
         <AnimatedTimer
           :time-left="remainingTime"
           :progress="progressPercentage"
           :is-active="isTimerRunning"
-          class="scale-105 sm:scale-115 transition-transform duration-500"
         />
       </div>
     </div>
