@@ -12,9 +12,20 @@
       "
     ></div>
 
-    <!-- Outer Tick Marks Ring -->
+    <!-- Rotating Radar Scanner Sweep Accent -->
+    <div
+      v-if="isActive"
+      class="absolute inset-1.5 rounded-full border border-transparent animate-[spin_8s_linear_infinite] pointer-events-none opacity-70 z-10"
+      style="border-top-color: rgba(163, 230, 53, 0.8)"
+    ></div>
+
+    <!-- Outer Tick Marks Ring (Slow continuous rotation when active) -->
     <div class="absolute inset-0 z-0">
-      <svg class="w-full h-full opacity-60 dark:opacity-40" viewBox="0 0 100 100">
+      <svg
+        class="w-full h-full opacity-60 dark:opacity-40 transition-transform duration-1000"
+        :class="isActive ? 'animate-[spin_120s_linear_infinite]' : ''"
+        viewBox="0 0 100 100"
+      >
         <g transform="translate(50, 50)">
           <!-- 60 Minute Ticks -->
           <line
@@ -44,25 +55,34 @@
 
     <!-- Main SVG Gauge Ring -->
     <svg
-      class="w-full h-full transform -rotate-90 relative z-10 drop-shadow-[0_0_20px_rgba(163,230,53,0.3)]"
+      class="w-full h-full transform -rotate-90 relative z-10 drop-shadow-[0_0_25px_rgba(163,230,53,0.35)]"
+      viewBox="0 0 100 100"
     >
+      <defs>
+        <linearGradient id="limeProgressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#a3e635" />
+          <stop offset="60%" stop-color="#4ade80" />
+          <stop offset="100%" stop-color="#10b981" />
+        </linearGradient>
+      </defs>
+
       <!-- Outer Decorative Accent Ring -->
       <circle
-        cx="50%"
-        cy="50%"
-        r="42%"
+        cx="50"
+        cy="50"
+        r="44"
         stroke="currentColor"
-        stroke-width="1"
-        stroke-dasharray="4 4"
+        stroke-width="0.8"
+        stroke-dasharray="3 3"
         fill="transparent"
         class="text-slate-300/40 dark:text-white/10"
       />
 
       <!-- Background Track -->
       <circle
-        cx="50%"
-        cy="50%"
-        r="39%"
+        cx="50"
+        cy="50"
+        r="39"
         stroke="currentColor"
         stroke-width="7"
         fill="transparent"
@@ -71,16 +91,32 @@
 
       <!-- Animated Progress Circle Track -->
       <circle
-        cx="50%"
-        cy="50%"
-        r="39%"
-        stroke="currentColor"
+        cx="50"
+        cy="50"
+        r="39"
+        stroke="url(#limeProgressGradient)"
         stroke-width="7"
         fill="transparent"
         stroke-linecap="round"
-        class="text-lime-500 dark:text-lime-400 transition-all duration-1000 ease-linear"
+        class="transition-all duration-1000 ease-linear"
         :style="{ strokeDasharray: circumference, strokeDashoffset: dashOffset }"
       />
+
+      <!-- Leading Glowing Orbital Particle Head (Travels along green arc) -->
+      <g v-if="isActive && progress > 0 && progress < 100">
+        <!-- Outer Glowing Pulsing Aura -->
+        <circle :cx="headX" :cy="headY" r="4" fill="#a3e635" class="animate-ping opacity-80" />
+        <!-- Solid Bright Particle Point -->
+        <circle
+          :cx="headX"
+          :cy="headY"
+          r="3"
+          fill="#a3e635"
+          class="drop-shadow-[0_0_8px_#a3e635]"
+        />
+        <!-- Center Core Light -->
+        <circle :cx="headX" :cy="headY" r="1.5" fill="#ffffff" />
+      </g>
     </svg>
 
     <!-- Center Digit Content -->
@@ -147,12 +183,27 @@ const props = defineProps({
   },
 })
 
-// Radius is 39% now.
+// Radius is 39 in SVG (100x100 viewBox). Circumference = 2 * PI * 39
 const circumference = 2 * Math.PI * 39
 
 const dashOffset = computed(() => {
   const progressPercent = Math.max(0, Math.min(100, props.progress))
   return circumference - (progressPercent / 100) * circumference
+})
+
+// Calculate exact (x, y) coordinates of leading arc head for orbital particle dot
+const headX = computed(() => {
+  const progressPercent = Math.max(0, Math.min(100, props.progress))
+  const angleDeg = (progressPercent / 100) * 360 - 90
+  const rad = (angleDeg * Math.PI) / 180
+  return 50 + 39 * Math.cos(rad)
+})
+
+const headY = computed(() => {
+  const progressPercent = Math.max(0, Math.min(100, props.progress))
+  const angleDeg = (progressPercent / 100) * 360 - 90
+  const rad = (angleDeg * Math.PI) / 180
+  return 50 + 39 * Math.sin(rad)
 })
 
 const formattedTime = computed(() => props.timeLeft)

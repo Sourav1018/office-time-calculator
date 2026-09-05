@@ -45,9 +45,8 @@
         class="flex items-center justify-between w-full sm:w-auto gap-3 relative z-10 border-t pt-3 sm:border-0 sm:pt-0 border-slate-200/50 dark:border-zinc-800"
       >
         <div class="flex items-center gap-2">
-          <!-- 12H / 24H Toggle Chip -->
+          <!-- 12H / 24H Toggle Chip (Always visible) -->
           <button
-            v-if="isPM"
             @click="$emit('toggle-format')"
             class="px-3 py-1.5 rounded-full border transition-all duration-300 text-[10px] font-black tracking-widest uppercase shadow-sm active:scale-95"
             :class="
@@ -117,7 +116,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
   endTime: {
@@ -139,22 +138,6 @@ defineEmits(['reset', 'toggle-sound', 'toggle-format'])
 const currentTime = ref('')
 const currentHours = ref(0)
 let interval = null
-
-// Check if PM (Checking current hours >= 12 OR if endTime contains 'PM' or is > 12h-ish)
-const isPM = computed(() => {
-  // Check Current Time
-  if (currentHours.value >= 12 && currentHours.value < 24) return true
-
-  // Check Out Time (Simple string check for 12h mode, or basic assumption if 24h mode?)
-  // Actually simplicity: if current time is PM, the button appears.
-  // If out time is PM (e.g. 5:48 PM), we definitely want to see it too.
-  if (props.endTime.includes('PM')) return true
-
-  // If in 24h mode, endTime is like 17:48.
-  // We can just rely on user toggling it back if they want.
-  // The requirement was "if current or out time is in PM".
-  return false
-})
 
 function updateTime() {
   const now = new Date()
