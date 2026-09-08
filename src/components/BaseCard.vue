@@ -1,11 +1,11 @@
 <template>
   <div
-    class="bg-black/40 backdrop-blur-2xl shadow-2xl rounded-3xl p-6 border border-white/5 border-t-white/20 max-w-full text-gray-100 relative overflow-hidden"
+    class="glass-card rounded-3xl p-6 relative overflow-hidden transition-all duration-300 hover:shadow-2xl"
     :class="customClass"
   >
     <!-- Header Slot -->
     <div v-if="$slots.header || title" class="mb-4">
-      <h2 v-if="title" class="text-2xl font-bold text-white tracking-wide">
+      <h2 v-if="title" class="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
         {{ title }}
       </h2>
       <slot name="header" />
@@ -17,7 +17,7 @@
     </div>
 
     <!-- Footer Slot -->
-    <div v-if="$slots.footer" class="pt-4 border-t border-white/5">
+    <div v-if="$slots.footer" class="pt-4 border-t border-slate-200/60 dark:border-white/10">
       <slot name="footer" />
     </div>
   </div>

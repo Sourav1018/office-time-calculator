@@ -1,206 +1,378 @@
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden transition-colors duration-500 font-sans selection:bg-lime-400 selection:text-black bg-gray-50 dark:bg-black">
-    
-    <!-- Background Grid -->
-    <div class="absolute inset-0 z-0 pointer-events-none opacity-20 text-lime-900/10 dark:text-white/5"
-         style="background-image: linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px); background-size: 50px 50px;">
-    </div>
-    
-    <!-- Large Background Accents -->
-    <div class="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-lime-500/20 dark:bg-lime-400/5 rounded-full blur-[120px] pointer-events-none transition-all duration-[2s]" :class="{ 'opacity-0': showFocusMode }"></div>
-    <div class="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-purple-500/20 dark:bg-purple-500/5 rounded-full blur-[100px] pointer-events-none transition-all duration-[2s]" :class="{ 'opacity-0': showFocusMode }"></div>
+  <div
+    class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden font-sans transition-colors duration-500 bg-slate-50 dark:bg-[#09090b]"
+  >
+    <!-- Background Subtle Radial Gradient Grid -->
+    <div
+      class="absolute inset-0 z-0 pointer-events-none opacity-30 dark:opacity-20"
+      style="
+        background-image: radial-gradient(
+          circle at 50% 50%,
+          rgba(var(--accent-rgb), 0.15) 0%,
+          transparent 60%
+        );
+      "
+    ></div>
 
     <!-- MAIN CONTENT CONTAINER -->
-    <div class="relative z-10 w-full max-w-4xl mx-auto px-6 transition-all duration-1000 ease-in-out transform"
-         :class="showFocusMode ? 'translate-y-[-5vh]' : 'translate-y-0'">
-
+    <div
+      class="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 pt-4 sm:pt-8 pb-32 sm:pb-36 transition-all duration-700 ease-out"
+      :class="showFocusMode ? 'scale-[0.99]' : 'scale-100'"
+    >
       <!-- ================= SETUP MODE ================= -->
-      <div 
-        class="transition-all duration-700 ease-out absolute inset-0 flex flex-col items-center justify-center"
-        :class="showFocusMode ? 'opacity-0 scale-90 pointer-events-none delay-0' : 'opacity-100 scale-100 delay-300 relative'"
+      <div
+        class="transition-all duration-500 ease-out flex flex-col items-center justify-center"
+        :class="
+          showFocusMode
+            ? 'opacity-0 scale-95 pointer-events-none absolute inset-0'
+            : 'opacity-100 scale-100 relative'
+        "
       >
-          <!-- Header -->
-          <div class="text-center mb-12">
-             <h1 class="text-4xl md:text-5xl font-bold mb-2 tracking-tight text-gray-900 dark:text-white transition-colors">Focus Timer</h1>
-             <div class="flex items-center justify-center gap-2 uppercase tracking-widest text-xs text-gray-500 dark:text-gray-500">
-                <span>Configure your session</span>
-                <span class="w-1 h-1 rounded-full bg-lime-500 dark:bg-lime-400"></span>
-                <span class="font-bold text-lime-600 dark:text-lime-400 transition-colors">{{ currentDayName }}</span>
-             </div>
+        <!-- Modern Bento Header -->
+        <div class="text-center mb-6 sm:mb-10">
+          <div
+            class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-card mb-3 sm:mb-4 text-xs font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300 shadow-sm border border-slate-200/80 dark:border-white/10"
+          >
+            <span
+              class="w-2 h-2 rounded-full animate-pulse"
+              :style="{ backgroundColor: 'var(--accent-color)' }"
+            ></span>
+            <span>{{ currentDayName }} Shift</span>
           </div>
 
-          <!-- Header: 12/24h Toggle -->
-          <div class="mb-4 flex justify-center">
-             <button 
-               @click="toggleTimeFormat"
-               class="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border transition-all"
-               :class="is24Hour ? 'text-lime-600 border-lime-500/50 bg-lime-100 dark:text-lime-400 dark:border-lime-400/50 dark:bg-lime-400/10' : 'text-gray-500 border-gray-300 hover:border-gray-500 dark:text-gray-500 dark:border-white/10 dark:hover:border-white/30'"
-             >
-               {{ is24Hour ? '24-Hour Mode' : '12-Hour Mode' }}
-             </button>
-          </div>
+          <h1
+            class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-2"
+          >
+            Office Time <span class="gradient-text-lime">Calculator</span>
+          </h1>
+          <p
+            class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto font-medium"
+          >
+            Set your check-in time to accurately compute your mandatory checkout hour.
+          </p>
+        </div>
 
-          <!-- Floating Inputs Grid -->
-          <div class="grid gap-4 w-full mb-12" :class="is24Hour ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2 md:grid-cols-4'">
-             <!-- Hours -->
-             <div class="group relative">
-                <input 
-                  id="hours"
-                  v-model.number="hours"
-                  type="number" 
-                  :min="is24Hour ? 0 : 1" 
-                  :max="is24Hour ? 23 : 12"
-                  class="peer no-spinner w-full h-32 rounded-2xl border text-center text-4xl font-bold outline-none transition-all placeholder-transparent
-                         bg-white border-gray-200 text-gray-900 hover:border-lime-500/50 focus:border-lime-500 focus:bg-white
-                         dark:bg-white/5 dark:border-white/10 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10 dark:hover:border-lime-400/50 dark:focus:border-lime-400"
-                  placeholder="00"
-                />
-                <label for="hours" class="absolute top-4 left-0 right-0 text-center text-[10px] font-bold uppercase tracking-widest pointer-events-none transition-colors text-gray-400 peer-focus:text-lime-600 dark:text-gray-500 dark:peer-focus:text-lime-400">Hours</label>
-             </div>
-
-             <!-- Minutes -->
-             <div class="group relative">
-                <input 
-                  id="minutes"
-                  v-model.number="minutes"
-                  type="number" 
-                  min="0" max="59"
-                  class="peer no-spinner w-full h-32 rounded-2xl border text-center text-4xl font-bold outline-none transition-all placeholder-transparent
-                         bg-white border-gray-200 text-gray-900 hover:border-lime-500/50 focus:border-lime-500 focus:bg-white
-                         dark:bg-white/5 dark:border-white/10 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10 dark:hover:border-lime-400/50 dark:focus:border-lime-400"
-                  placeholder="00"
-                />
-                <label for="minutes" class="absolute top-4 left-0 right-0 text-center text-[10px] font-bold uppercase tracking-widest pointer-events-none transition-colors text-gray-400 peer-focus:text-lime-600 dark:text-gray-500 dark:peer-focus:text-lime-400">Minutes</label>
-             </div>
-
-             <!-- AM/PM Toggle (Hidden in 24h mode) -->
-             <div class="group relative" v-if="!is24Hour">
-                <button 
-                  id="period"
-                  @click="period = period === 'AM' ? 'PM' : 'AM'"
-                  class="peer w-full h-32 rounded-2xl border outline-none transition-all flex flex-col items-center justify-center gap-2 group/btn
-                         bg-white border-gray-200 text-gray-900 hover:border-lime-500/50 focus:border-lime-500 focus:bg-white
-                         dark:bg-white/5 dark:border-white/10 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10 dark:hover:border-lime-400/50 dark:focus:border-lime-400"
-                >
-                  <span class="text-4xl font-bold">{{ period }}</span>
-                  <div class="flex items-center gap-1 text-[10px] uppercase tracking-widest transition-colors text-gray-400 group-hover/btn:text-lime-600 dark:text-gray-500 dark:group-hover/btn:text-lime-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                    </svg>
-                    <span>Switch</span>
-                  </div>
-                </button>
-                <label for="period" class="absolute top-4 left-0 right-0 text-center text-[10px] font-bold uppercase tracking-widest pointer-events-none transition-colors text-gray-400 peer-focus:text-lime-600 dark:text-gray-500 dark:peer-focus:text-lime-400">Period</label>
-             </div>
-
-             <!-- Full/Half Toggle (Hidden on Saturday) -->
-             <div class="group relative flex flex-col h-32" v-if="!isSaturday">
-                <button 
-                  @click="isHalfDay = !isHalfDay"
-                  class="peer w-full flex-1 rounded-2xl border outline-none transition-all flex flex-col items-center justify-center gap-1 group/btn relative overflow-hidden
-                         bg-white border-gray-200 text-gray-900 hover:border-lime-500/50 focus:border-lime-500 focus:bg-white
-                         dark:bg-white/5 dark:border-white/10 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10 dark:hover:border-lime-400/50 dark:focus:border-lime-400"
-                >
-                  <!-- Neon Duration Badge -->
-                  <div class="absolute top-3 px-2 py-0.5 rounded-md border text-[10px] font-bold tracking-widest shadow-[0_0_10px_rgba(163,230,53,0.2)]
-                              bg-lime-100 border-lime-500 text-lime-700
-                              dark:bg-lime-400/10 dark:border-lime-400 dark:text-lime-400">
-                    {{ decimalHours }}H
-                  </div>
-
-                  <span class="text-2xl font-bold uppercase tracking-wider mt-4">{{ isHalfDay ? 'HALF' : 'FULL' }}</span>
-                  <div class="flex items-center gap-1 text-[10px] uppercase tracking-widest transition-colors text-gray-400 group-hover/btn:text-lime-600 dark:text-gray-500 dark:group-hover/btn:text-lime-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                    </svg>
-                    <span>Switch</span>
-                  </div>
-                </button>
-                <label class="absolute top-[-25px] left-0 right-0 text-center text-[10px] font-bold uppercase tracking-widest pointer-events-none transition-colors text-gray-400 peer-focus:text-lime-600 dark:text-gray-500 dark:peer-focus:text-lime-400 opacity-0">Session</label>
-             </div>
-          </div>
-
-          <!-- Actions -->
-          <div class="flex flex-col gap-4 items-center">
-            <!-- Big Launcher/Resume Button -->
-            <!-- If timer is running, this returns to focus (Highlight). If not, it starts. -->
-            <button 
-                @click="isTimerRunning ? showFocusMode = true : startTimer()"
-                class="group relative inline-flex items-center justify-center px-12 py-6 overflow-hidden font-bold text-black transition-all duration-300 bg-lime-400 rounded-full hover:bg-lime-300 hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(163,230,53,0.3)]"
+        <!-- Format Toggle Bar & Preview Trigger -->
+        <div class="mb-5 sm:mb-6 flex items-center justify-center gap-3 flex-wrap">
+          <button
+            @click="toggleTimeFormat"
+            class="text-[10px] sm:text-[11px] font-black uppercase tracking-widest px-3.5 sm:px-4 py-1.5 rounded-full glass-card border transition-all duration-300 shadow-sm active:scale-95 flex items-center gap-2 cursor-pointer"
+            :class="
+              is24Hour
+                ? ''
+                : 'text-slate-600 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:border-slate-300'
+            "
+            :style="
+              is24Hour
+                ? {
+                    color: 'var(--accent-color)',
+                    borderColor: 'rgba(var(--accent-rgb), 0.6)',
+                    backgroundColor: 'rgba(var(--accent-rgb), 0.1)',
+                  }
+                : {}
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-3.5 w-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-                <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-black"></span>
-                <span class="relative text-lg uppercase tracking-[0.2em]">{{ isTimerRunning ? 'Return to Focus' : 'Initiate Sequence' }}</span>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{{ is24Hour ? '24-Hour Format' : '12-Hour Format' }}</span>
+          </button>
+
+          <!-- Preview Sarcastic Celebration Popup Button -->
+          <button
+            @click="isShiftEndedModalOpen = true"
+            class="text-[10px] sm:text-[11px] font-black uppercase tracking-widest px-3.5 sm:px-4 py-1.5 rounded-full glass-card border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 transition-all duration-300 shadow-sm active:scale-95 flex items-center gap-1.5 cursor-pointer hover:border-amber-400/50 hover:bg-amber-400/10"
+          >
+            <span>Preview Celebration</span>
+            <span>🥳</span>
+          </button>
+        </div>
+
+        <!-- Bento Grid Inputs Container -->
+        <div
+          class="grid gap-3 sm:gap-4 w-full max-w-2xl mb-6 sm:mb-8"
+          :class="!is24Hour ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2 md:grid-cols-3'"
+        >
+          <!-- Hours Card Input -->
+          <div
+            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group transition-all duration-300 shadow-xl"
+          >
+            <div
+              class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1 sm:mb-2"
+            >
+              <span>In Hour</span>
+              <span class="font-mono transition-colors" :style="{ color: 'var(--accent-color)' }"
+                >HH</span
+              >
+            </div>
+
+            <input
+              id="hours"
+              v-model.number="hours"
+              type="number"
+              :min="is24Hour ? 0 : 1"
+              :max="is24Hour ? 23 : 12"
+              class="no-spinner w-full bg-transparent text-center text-3xl sm:text-5xl font-black outline-none tracking-tight text-slate-900 dark:text-white placeholder-slate-300 dark:placeholder-zinc-700 font-mono py-1 sm:py-2"
+              placeholder="09"
+            />
+
+            <div
+              class="text-[9px] text-center font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest mt-1"
+            >
+              {{ is24Hour ? '(00 - 23)' : '(01 - 12)' }}
+            </div>
+          </div>
+
+          <!-- Minutes Card Input -->
+          <div
+            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group transition-all duration-300 shadow-xl"
+          >
+            <div
+              class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1 sm:mb-2"
+            >
+              <span>In Minute</span>
+              <span class="font-mono transition-colors" :style="{ color: 'var(--accent-color)' }"
+                >MM</span
+              >
+            </div>
+
+            <input
+              id="minutes"
+              v-model.number="minutes"
+              type="number"
+              min="0"
+              max="59"
+              class="no-spinner w-full bg-transparent text-center text-3xl sm:text-5xl font-black outline-none tracking-tight text-slate-900 dark:text-white placeholder-slate-300 dark:placeholder-zinc-700 font-mono py-1 sm:py-2"
+              placeholder="30"
+            />
+
+            <div
+              class="text-[9px] text-center font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest mt-1"
+            >
+              (00 - 59)
+            </div>
+          </div>
+
+          <!-- AM / PM Toggle Card (Hidden in 24h mode) -->
+          <div
+            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group transition-all duration-300 shadow-xl"
+            v-if="!is24Hour"
+          >
+            <div
+              class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1 sm:mb-2 text-center"
+            >
+              Period
+            </div>
+
+            <button
+              id="period"
+              @click="period = period === 'AM' ? 'PM' : 'AM'"
+              class="w-full flex-1 rounded-2xl border transition-all duration-300 flex flex-col items-center justify-center gap-0.5 sm:gap-1 active:scale-95 py-1.5 sm:py-2 bg-slate-100/80 border-slate-200 text-slate-900 dark:bg-zinc-800/60 dark:border-zinc-700/60 dark:text-white"
+            >
+              <span
+                class="text-2xl sm:text-3xl font-black tracking-wider font-mono transition-colors"
+                :style="{ color: 'var(--accent-color)' }"
+                >{{ period }}</span
+              >
+              <span
+                class="text-[9px] font-extrabold uppercase tracking-widest text-slate-600 dark:text-slate-400"
+                >Click Switch</span
+              >
             </button>
 
-            <!-- Reset Button (Secondary, only if running) -->
-            <button 
-                v-if="isTimerRunning"
-                @click="resetForm"
-                class="text-[10px] uppercase tracking-widest text-red-400 hover:text-red-300 transition-colors flex items-center gap-2 px-4 py-2 rounded-full border border-transparent hover:border-red-400/20 hover:bg-red-400/10"
+            <div
+              class="text-[9px] text-center font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest mt-1"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                <span>Reset Timer</span>
-            </button>
+              Meridiem
+            </div>
           </div>
+
+          <!-- Shift Mode Toggle Card (Full/Half Day) -->
+          <div
+            class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative group transition-all duration-300 shadow-xl"
+            v-if="!isSaturday"
+          >
+            <div
+              class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1 sm:mb-2"
+            >
+              <span>Shift Type</span>
+              <span
+                class="px-1.5 py-0.5 rounded text-[9px] font-extrabold transition-colors border"
+                :style="{
+                  backgroundColor: 'rgba(var(--accent-rgb), 0.2)',
+                  color: 'var(--accent-color)',
+                  borderColor: 'rgba(var(--accent-rgb), 0.3)',
+                }"
+              >
+                {{ decimalHours }}h
+              </span>
+            </div>
+
+            <button
+              @click="isHalfDay = !isHalfDay"
+              class="w-full flex-1 rounded-2xl border transition-all duration-300 flex flex-col items-center justify-center gap-0.5 sm:gap-1 active:scale-95 py-1.5 sm:py-2 bg-slate-100/80 border-slate-200 text-slate-900 dark:bg-zinc-800/60 dark:border-zinc-700/60 dark:text-white"
+            >
+              <span
+                class="text-lg sm:text-xl font-black uppercase tracking-wider text-slate-900 dark:text-white"
+                >{{ isHalfDay ? 'HALF DAY' : 'FULL DAY' }}</span
+              >
+              <span
+                class="text-[9px] font-extrabold uppercase tracking-widest text-slate-600 dark:text-slate-400"
+                >Toggle Mode</span
+              >
+            </button>
+
+            <div
+              class="text-[9px] text-center font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest mt-1"
+            >
+              {{ isHalfDay ? '4.3 Hours' : '8.8 Hours' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col gap-3 items-center w-full max-w-sm">
+          <!-- Big Pulsing Launch CTA Button -->
+          <button
+            @click="isTimerRunning ? (showFocusMode = true) : startTimer()"
+            class="w-full relative inline-flex items-center justify-center px-8 py-3.5 sm:py-4 overflow-hidden font-black text-slate-950 transition-all duration-300 rounded-2xl hover:scale-[1.02] active:scale-[0.98] group cursor-pointer"
+            :style="{
+              backgroundColor: 'var(--accent-color)',
+              borderColor: 'var(--accent-color)',
+              boxShadow: '0 0 30px rgba(var(--accent-rgb), 0.35)',
+            }"
+          >
+            <span
+              class="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-20 transition-opacity bg-white"
+            ></span>
+            <span
+              class="relative text-xs sm:text-sm uppercase tracking-[0.2em] flex items-center gap-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span>{{ isTimerRunning ? 'Return to Countdown' : 'Calculate Checkout' }}</span>
+            </span>
+          </button>
+
+          <!-- Secondary Reset Button -->
+          <button
+            v-if="isTimerRunning"
+            @click="resetForm"
+            class="text-[11px] font-extrabold uppercase tracking-widest text-rose-500 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 transition-colors flex items-center gap-1.5 px-4 py-2 rounded-xl border border-transparent hover:border-rose-500/20 hover:bg-rose-500/10"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-3.5 w-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+            <span>Reset Timer Data</span>
+          </button>
+        </div>
       </div>
 
       <!-- ================= FOCUS MODE ================= -->
-      <div 
-        class="transition-all duration-1000 ease-out flex flex-col items-center justify-center"
-        :class="showFocusMode ? 'opacity-100 scale-100 delay-300 relative' : 'opacity-0 scale-75 pointer-events-none absolute inset-0'"
+      <div
+        class="transition-all duration-700 ease-out flex flex-col items-center justify-center relative z-20 py-4 sm:py-6"
+        :class="
+          showFocusMode
+            ? 'opacity-100 scale-100 relative'
+            : 'opacity-0 scale-90 pointer-events-none absolute inset-0'
+        "
       >
-         <!-- Back Button -->
-         <button 
-           @click="showFocusMode = false"
-           class="absolute top-[-80px] left-0 text-lime-600 dark:text-lime-400/70 hover:text-lime-700 dark:hover:text-lime-400 transition-all flex items-center gap-2 group 
-                  border border-lime-500/30 hover:border-lime-500 hover:bg-lime-500/10 dark:border-lime-400/20 dark:hover:border-lime-400/50 dark:hover:bg-lime-400/10 
-                  rounded-full px-4 py-2 
-                  shadow-[0_0_15px_rgba(163,230,53,0.1)] hover:shadow-[0_0_25px_rgba(163,230,53,0.4)]"
-         >
-           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-           </svg>
-           <span class="text-xs uppercase tracking-widest font-bold">Setup</span>
-         </button>
+        <!-- Floating Back Button (Generous margin below to prevent overlap) -->
+        <button
+          @click.stop="showFocusMode = false"
+          class="relative z-50 mb-10 sm:mb-14 px-6 py-2.5 sm:py-3 rounded-full glass-card border transition-all duration-300 flex items-center gap-2 group active:scale-95 hover:scale-105 shadow-xl cursor-pointer text-slate-800 border-slate-300 hover:border-slate-400 dark:text-slate-100 dark:border-white/20 dark:hover:border-white/40"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 transform group-hover:-translate-x-1 transition-transform"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2.5"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
+          </svg>
+          <span class="text-xs uppercase tracking-widest font-black">Adjust Setup</span>
+        </button>
 
-         <AnimatedTimer 
-            :time-left="remainingTime" 
-            :progress="progressPercentage"
-            :is-active="isTimerRunning"
-            class="scale-110 sm:scale-125"
-          />
+        <!-- Animated Timer Gauge (Clean margin & fluid scaling) -->
+        <AnimatedTimer
+          :time-left="remainingTime"
+          :progress="progressPercentage"
+          :is-active="isTimerRunning"
+        />
       </div>
-
     </div>
 
-    <!-- DATA DECK (Bottom HUD) -->
+    <!-- DATA DECK (Bottom Floating HUD) -->
     <transition
-      enter-active-class="transition duration-700 ease-out"
+      enter-active-class="transition duration-500 ease-out"
       enter-from-class="translate-y-full opacity-0"
       enter-to-class="translate-y-0 opacity-100"
-      leave-active-class="transition duration-500 ease-in"
+      leave-active-class="transition duration-300 ease-in"
       leave-from-class="translate-y-0 opacity-100"
       leave-to-class="translate-y-full opacity-0"
     >
-      <DataDeck 
-        v-if="showFocusMode" 
-        :end-time="formattedCheckoutTime" 
+      <DataDeck
+        v-if="showFocusMode"
+        :end-time="formattedCheckoutTime"
         :is-24-hour="is24Hour"
-        @reset="resetForm" 
+        :is-reminder-active="isReminderActive"
+        @reset="resetForm"
         @toggle-sound="setReminder"
-        @toggle-format="is24Hour = !is24Hour; calculateCheckoutTime()"
+        @toggle-format="toggleTimeFormat"
       />
     </transition>
-
+    <!-- Shift Ended Sarcastic Modal Popup -->
+    <ShiftEndedModal
+      :is-open="isShiftEndedModalOpen"
+      :checkout-time="formattedCheckoutTime"
+      @close="isShiftEndedModalOpen = false"
+    />
   </div>
 </template>
 
 <script setup>
 import AnimatedTimer from '@/components/AnimatedTimer.vue'
 import DataDeck from '@/components/DataDeck.vue'
-import { onMounted, ref } from 'vue'
+import ShiftEndedModal from '@/components/ShiftEndedModal.vue'
+import { onMounted, ref, watch } from 'vue'
 
 defineOptions({
   name: 'HomePage',
@@ -220,8 +392,10 @@ const currentDayName = ref('')
 const formattedCheckoutTime = ref('--:--')
 const remainingTime = ref('00:00:00')
 const progressPercentage = ref(0)
-const isTimerRunning = ref(false) 
-const showFocusMode = ref(false) 
+const isTimerRunning = ref(false)
+const showFocusMode = ref(false)
+const isReminderActive = ref(false)
+const isShiftEndedModalOpen = ref(false)
 
 let timerInterval = null
 
@@ -235,19 +409,19 @@ function setCurrentDay() {
 
 function detectDayAndDefaults() {
   const day = new Date().getDay()
-  
+
   // Check specifically for Saturday (6)
   if (day === 6) {
     isSaturday.value = true
     isHalfDay.value = false
     decimalHours.value = 3.9
-  } 
+  }
   // Mon(1) to Fri(5)
   else if (day >= 1 && day <= 5) {
     isSaturday.value = false
     isHalfDay.value = false
     decimalHours.value = 8.8
-  } 
+  }
   // Sunday (0)
   else {
     isSaturday.value = false
@@ -268,7 +442,6 @@ watch(isHalfDay, (newVal) => {
 // ----------------------------
 
 // --- Input Validation ---
-import { watch } from 'vue'
 watch(minutes, (newVal) => {
   if (newVal === '') return
   if (newVal > 59) minutes.value = 59
@@ -284,18 +457,24 @@ watch(hours, (newVal) => {
 
 function resetForm() {
   isTimerRunning.value = false
-  showFocusMode.value = false 
+  isReminderActive.value = false
+  showFocusMode.value = false
   detectDayAndDefaults() // Reset back to smart defaults
-  
+
   setTimeout(() => {
-      remainingTime.value = '00:00:00'
-      progressPercentage.value = 0
+    remainingTime.value = '00:00:00'
+    progressPercentage.value = 0
   }, 500)
-  
+
   if (timerInterval) clearInterval(timerInterval)
   clearTimerData()
   resetNotification()
   clearExistingDate()
+}
+
+function toggleTimeFormat() {
+  is24Hour.value = !is24Hour.value
+  calculateCheckoutTime()
 }
 
 function calculateCheckoutTime() {
@@ -314,14 +493,14 @@ function calculateCheckoutTime() {
   const checkoutHours = checkoutDate.getHours()
   const checkoutMinutes = checkoutDate.getMinutes()
   const checkoutSeconds = checkoutDate.getSeconds() // Usually 0 but good to be explicit or just 00
-  
+
   let formatted = ''
   if (is24Hour.value) {
-      formatted = `${checkoutHours.toString().padStart(2, '0')}:${checkoutMinutes.toString().padStart(2, '0')}:${checkoutSeconds.toString().padStart(2, '0')}`
+    formatted = `${checkoutHours.toString().padStart(2, '0')}:${checkoutMinutes.toString().padStart(2, '0')}:${checkoutSeconds.toString().padStart(2, '0')}`
   } else {
-      const checkoutPeriod = checkoutHours >= 12 ? 'PM' : 'AM'
-      const displayHours = checkoutHours % 12 || 12
-      formatted = `${displayHours}:${checkoutMinutes.toString().padStart(2, '0')}:${checkoutSeconds.toString().padStart(2, '0')} ${checkoutPeriod}`
+    const checkoutPeriod = checkoutHours >= 12 ? 'PM' : 'AM'
+    const displayHours = checkoutHours % 12 || 12
+    formatted = `${displayHours}:${checkoutMinutes.toString().padStart(2, '0')}:${checkoutSeconds.toString().padStart(2, '0')} ${checkoutPeriod}`
   }
 
   formattedCheckoutTime.value = formatted
@@ -329,10 +508,15 @@ function calculateCheckoutTime() {
   return checkoutDate
 }
 
-
 function saveCheckoutTime() {
   const currentDateKey = `date_${new Date().toISOString().split('T')[0]}`
   localStorage.setItem(currentDateKey, formattedCheckoutTime.value)
+}
+
+function saveTimerDataState() {
+  const timerData = JSON.parse(localStorage.getItem('timerData')) || {}
+  timerData.isReminderActive = isReminderActive.value
+  localStorage.setItem('timerData', JSON.stringify(timerData))
 }
 
 function startTimer() {
@@ -356,14 +540,15 @@ function startTimer() {
       startTime: startTime.getTime(),
       checkoutDate: checkoutDate.getTime(),
       totalDuration: totalDuration,
+      isReminderActive: isReminderActive.value,
       formState: {
         hours: hours.value,
         minutes: minutes.value,
         period: period.value,
         decimalHours: decimalHours.value,
         is24Hour: is24Hour.value,
-        isHalfDay: isHalfDay.value
-      }
+        isHalfDay: isHalfDay.value,
+      },
     }),
   )
 
@@ -372,9 +557,9 @@ function startTimer() {
 
 function runTimer(checkoutTime, totalDuration) {
   if (timerInterval) clearInterval(timerInterval)
-  
+
   isTimerRunning.value = true
-  showFocusMode.value = true 
+  showFocusMode.value = true
 
   timerInterval = setInterval(() => {
     const now = new Date().getTime()
@@ -383,8 +568,14 @@ function runTimer(checkoutTime, totalDuration) {
     if (timeDiff <= 0) {
       clearInterval(timerInterval)
       remainingTime.value = '00:00:00'
-      progressPercentage.value = 0
-      isTimerRunning.value = false 
+      progressPercentage.value = 100
+      isTimerRunning.value = false
+      isReminderActive.value = false
+      isShiftEndedModalOpen.value = true
+      notifyUser(
+        'Shift Completed!',
+        `Your shift has officially ended at ${formattedCheckoutTime.value}. Time to check out!`,
+      )
       clearTimerData()
       return
     }
@@ -397,12 +588,11 @@ function runTimer(checkoutTime, totalDuration) {
 
     // Update Progress Percentage
     if (totalDuration > 0) {
-        // Inverted: Start at 0, fill to 100
-        progressPercentage.value = 100 - ((timeDiff / totalDuration) * 100)
+      // Inverted: Start at 0, fill to 100
+      progressPercentage.value = 100 - (timeDiff / totalDuration) * 100
     } else {
-        progressPercentage.value = 100 
+      progressPercentage.value = 100
     }
-
   }, 1000)
 }
 
@@ -410,9 +600,9 @@ function clearTimerData() {
   localStorage.removeItem('timerData')
 }
 
-function clearExistingDate(){
+function clearExistingDate() {
   const allKeys = Object.keys(localStorage)
-  allKeys.forEach(key => {
+  allKeys.forEach((key) => {
     if (key.startsWith('date_')) {
       localStorage.removeItem(key)
     }
@@ -424,29 +614,34 @@ function resumeTimer() {
   if (timerData) {
     // Restore Form State
     if (timerData.formState) {
-        hours.value = timerData.formState.hours
-        minutes.value = timerData.formState.minutes
-        period.value = timerData.formState.period
-        decimalHours.value = timerData.formState.decimalHours
-        if (timerData.formState.is24Hour !== undefined) is24Hour.value = timerData.formState.is24Hour
-        if (timerData.formState.isHalfDay !== undefined) isHalfDay.value = timerData.formState.isHalfDay
+      hours.value = timerData.formState.hours
+      minutes.value = timerData.formState.minutes
+      period.value = timerData.formState.period
+      decimalHours.value = timerData.formState.decimalHours
+      if (timerData.formState.is24Hour !== undefined) is24Hour.value = timerData.formState.is24Hour
+      if (timerData.formState.isHalfDay !== undefined)
+        isHalfDay.value = timerData.formState.isHalfDay
+    }
+
+    if (timerData.isReminderActive !== undefined) {
+      isReminderActive.value = timerData.isReminderActive
     }
 
     const currentTime = new Date().getTime()
     const remainingTimeInMillis = timerData.checkoutDate - currentTime
 
     if (remainingTimeInMillis > 0) {
-        let total = timerData.totalDuration
-        if (!total) total = remainingTimeInMillis 
-        
-        // Initial set
-        const hoursLeft = Math.floor(remainingTimeInMillis / (1000 * 60 * 60))
-        const minutesLeft = Math.floor((remainingTimeInMillis % (1000 * 60 * 60)) / (1000 * 60))
-        const secondsLeft = Math.floor((remainingTimeInMillis % (1000 * 60)) / 1000)
-        remainingTime.value = `${hoursLeft.toString().padStart(2, '0')}:${minutesLeft.toString().padStart(2, '0')}:${secondsLeft.toString().padStart(2, '0')}`
-        
-        runTimer(timerData.checkoutDate, total)
-        showFocusMode.value = true
+      let total = timerData.totalDuration
+      if (!total) total = remainingTimeInMillis
+
+      // Initial set
+      const hoursLeft = Math.floor(remainingTimeInMillis / (1000 * 60 * 60))
+      const minutesLeft = Math.floor((remainingTimeInMillis % (1000 * 60 * 60)) / (1000 * 60))
+      const secondsLeft = Math.floor((remainingTimeInMillis % (1000 * 60)) / 1000)
+      remainingTime.value = `${hoursLeft.toString().padStart(2, '0')}:${minutesLeft.toString().padStart(2, '0')}:${secondsLeft.toString().padStart(2, '0')}`
+
+      runTimer(timerData.checkoutDate, total)
+      showFocusMode.value = true
     } else {
       clearTimerData()
     }
@@ -456,11 +651,9 @@ function resumeTimer() {
   }
 }
 
-// ... rest of checking logic ...
-
 function checkAndRestoreCheckoutTime() {
   const currentDateKey = `date_${new Date().toISOString().split('T')[0]}`
-  
+
   // Cleanup old dates
   Object.keys(localStorage).forEach((key) => {
     if (key.startsWith('date_')) {
@@ -480,21 +673,48 @@ function checkAndRestoreCheckoutTime() {
   }
 }
 
-import { scheduleNotification } from '@/composables/notification'
+import { scheduleNotification, notifyUser } from '@/composables/notification'
 
 function setReminder() {
-  const delay = Math.max(0, calculateCheckoutTime().getTime() - new Date().getTime() - (5 * 60 * 1000))
-  
+  // Toggle reminder active state
+  isReminderActive.value = !isReminderActive.value
+
+  if (!isReminderActive.value) {
+    resetNotification()
+    saveTimerDataState()
+    return
+  }
+
+  const now = new Date().getTime()
+  const checkoutTimeMs = calculateCheckoutTime().getTime()
+
+  // 1. Notification 5 minutes before checkout
+  const fiveMinDelay = Math.max(0, checkoutTimeMs - now - 5 * 60 * 1000)
   scheduleNotification(
-    'Checkout Reminder',
+    '5-Minute Checkout Warning',
     {
-        body: `Your session will end in 5 minutes at ${formattedCheckoutTime.value}`,
-        vibrate: [200, 100, 200],
-        icon: '/office-time-calculator/notification-icon.png',
-        badge: '/office-time-calculator/badge-icon.png'
+      body: `Your session will end in 5 minutes at ${formattedCheckoutTime.value}`,
+      vibrate: [200, 100, 200],
+      icon: '/office-time-calculator/notification-icon.png',
+      badge: '/office-time-calculator/badge-icon.png',
     },
-    delay
+    fiveMinDelay,
   )
+
+  // 2. Notification AT checkout time (0 minutes left)
+  const finalDelay = Math.max(0, checkoutTimeMs - now)
+  scheduleNotification(
+    'Shift Completed!',
+    {
+      body: `Your shift has officially ended at ${formattedCheckoutTime.value}. Time to check out!`,
+      vibrate: [300, 100, 300, 100, 300],
+      icon: '/office-time-calculator/notification-icon.png',
+      badge: '/office-time-calculator/badge-icon.png',
+    },
+    finalDelay,
+  )
+
+  saveTimerDataState()
 }
 
 function resetNotification() {

@@ -4,7 +4,7 @@ const routes = [
     name: 'login',
     component: () => import('@/views/LoginPage.vue'),
     meta: {
-      title: 'Login - Focus Timer',
+      title: 'Login - Office Time Calculator',
     },
   },
   {
@@ -12,7 +12,7 @@ const routes = [
     name: 'home',
     component: () => import('@/views/HomePage.vue'),
     meta: {
-      title: 'Dashboard - Focus Timer',
+      title: 'Office Time Calculator',
     },
   },
 ]
